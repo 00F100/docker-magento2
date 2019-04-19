@@ -1,0 +1,7 @@
+version: '3'
+services:
+  php-fpm-zts:
+    image: 00f100/php-fpm-zts:latest
+    build: ./php-fpm-zts
+    ports:
+      - "9010:9010"
