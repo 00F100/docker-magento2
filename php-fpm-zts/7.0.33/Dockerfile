@@ -86,16 +86,10 @@ RUN sed 's/\;pid = run\/php-fpm.pid/pid = run\/php-fpm.pid/g' \
     /opt/php-7.0/etc/php-fpm.conf.default \
     > /opt/php-7.0/etc/php-fpm.conf
 
-RUN sed 's/\listen = 127.0.0.1:9000/listen = 127.0.0.1:9010/g' \
+RUN sed 's/\listen = 127.0.0.1:9000/listen = 127.0.0.1:9703/g' \
     /opt/php-7.0/etc/php-fpm.d/www.conf.default \
     > /opt/php-7.0/etc/php-fpm.d/www.conf
 
 ENV PATH "/opt/php-7.0/sbin:/opt/php-7.0/bin:$PATH"
 
 RUN pecl install pthreads
-
-EXPOSE 9010
-
-WORKDIR /source
-
-CMD ["php-fpm", "-F"]
