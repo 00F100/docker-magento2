@@ -24,6 +24,8 @@ services:
       context: ./php-daemon/7.0.33
     ports:
       - "9000:9000"
+    volumes:
+      - ./:/var/www/html
   
   # Nginx Web Server
   nginx:
@@ -38,3 +40,5 @@ services:
     volumes:
       - ./nginx/conf.d:/etc/nginx/sites-enabled
       - ./:/var/www/html
+    links:
+      - php-7-0-33-daemon
