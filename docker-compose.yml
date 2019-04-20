@@ -1,7 +1,40 @@
 version: '3'
 services:
-  php-7-0-33-fpm-zts:
-    image: 00f100/php-7-0-33-fpm-zts:latest
-    build: ./php-fpm-zts/7.0.33
+
+  # PHP 7.0 FPM + ZTS
+  # php-7-0-33-fpm-zts:
+  #   image: 00f100/php-fpm-zts:7.0.33
+  #   build: 
+  #     context: ./php-fpm-zts/7.0.33
+
+  # # # PHP 7.0 Composer
+  # php-7-0-33-composer:
+  #   image: 00f100/php-composer:7.0.33
+  #   build: 
+  #     context: ./php-composer/7.0.33
+  #     args:
+  #         - UID=33
+  #         - GID=33
+  #         - USER=www-data
+  
+  # PHP 7.0 daemon
+  php-7-0-33-daemon:
+    image: 00f100/php-daemon:7.0.33
+    build: 
+      context: ./php-daemon/7.0.33
     ports:
-      - "9703:9703"
+      - "9000:9000"
+  
+  # Nginx Web Server
+  nginx:
+    restart: always
+    image: 00f100/nginx:latest
+    depends_on:
+      - php-7-0-33-daemon
+    build: 
+      context: ./nginx
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/sites-enabled
+      - ./:/var/www/html

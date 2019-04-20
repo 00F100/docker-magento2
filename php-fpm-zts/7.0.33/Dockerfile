@@ -48,8 +48,6 @@ RUN cd /usr/local/src/php7.0-build/php-7.0.33/ \
     --with-mcrypt \
     --with-zlib \
     --with-gd \
-    --with-bz2 \
-    --with-zlib \
     --with-mhash \
     --with-pcre-regex \
     --with-pdo-mysql \
@@ -67,12 +65,10 @@ RUN cd /usr/local/src/php7.0-build/php-7.0.33/ \
     --enable-soap \
     --enable-bcmath \
     --enable-zip \
-    --with-xsl \
     --enable-gd-native-ttf \
     --enable-opcache \
     --enable-fpm \
     --enable-intl \
-    --enable-pthreads \
     --enable-maintainer-zts \
     --disable-rpath \
     --without-sqlite3 \
@@ -86,9 +82,7 @@ RUN sed 's/\;pid = run\/php-fpm.pid/pid = run\/php-fpm.pid/g' \
     /opt/php-7.0/etc/php-fpm.conf.default \
     > /opt/php-7.0/etc/php-fpm.conf
 
-RUN sed 's/\listen = 127.0.0.1:9000/listen = 127.0.0.1:9703/g' \
-    /opt/php-7.0/etc/php-fpm.d/www.conf.default \
-    > /opt/php-7.0/etc/php-fpm.d/www.conf
+RUN cp /opt/php-7.0/etc/php-fpm.d/www.conf.default /opt/php-7.0/etc/php-fpm.d/www.conf
 
 ENV PATH "/opt/php-7.0/sbin:/opt/php-7.0/bin:$PATH"
 
