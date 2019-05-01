@@ -1,24 +1,6 @@
 version: '3'
 services:
 
-  # PHP 7.0 FPM + ZTS
-  php-7-0-33-fpm-zts:
-    image: 00f100/php-fpm-zts:7.0.33
-    build: 
-      context: ./infra/php-fpm-zts/7.0.33
-
-  # PHP 7.0 Composer
-  php-7-0-33-composer:
-    image: 00f100/php-composer:7.0.33
-    build: 
-      context: ./infra/php-composer/7.0.33
-      args:
-          - UID=33
-          - GID=33
-          - USER=www-data
-    volumes:
-      - ./magento2:/var/www/html
-  
   # PHP 7.0 daemon
   php-7-0-33-daemon:
     image: 00f100/php-daemon:7.0.33
