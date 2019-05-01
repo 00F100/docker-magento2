@@ -2,30 +2,32 @@ version: '3'
 services:
 
   # PHP 7.0 FPM + ZTS
-  # php-7-0-33-fpm-zts:
-  #   image: 00f100/php-fpm-zts:7.0.33
-  #   build: 
-  #     context: ./php-fpm-zts/7.0.33
+  php-7-0-33-fpm-zts:
+    image: 00f100/php-fpm-zts:7.0.33
+    build: 
+      context: ./infra/php-fpm-zts/7.0.33
 
-  # # # PHP 7.0 Composer
-  # php-7-0-33-composer:
-  #   image: 00f100/php-composer:7.0.33
-  #   build: 
-  #     context: ./php-composer/7.0.33
-  #     args:
-  #         - UID=33
-  #         - GID=33
-  #         - USER=www-data
+  # PHP 7.0 Composer
+  php-7-0-33-composer:
+    image: 00f100/php-composer:7.0.33
+    build: 
+      context: ./infra/php-composer/7.0.33
+      args:
+          - UID=33
+          - GID=33
+          - USER=www-data
+    volumes:
+      - ./magento2:/var/www/html
   
   # PHP 7.0 daemon
   php-7-0-33-daemon:
     image: 00f100/php-daemon:7.0.33
     build: 
-      context: ./php-daemon/7.0.33
+      context: ./infra/php-daemon/7.0.33
     ports:
       - "9000:9000"
     volumes:
-      - ./:/var/www/html
+      - ./magento2:/var/www/html
   
   # Nginx Web Server
   nginx:
@@ -34,11 +36,24 @@ services:
     depends_on:
       - php-7-0-33-daemon
     build: 
-      context: ./nginx
+      context: ./infra/nginx
     ports:
       - "80:80"
     volumes:
-      - ./nginx/conf.d:/etc/nginx/sites-enabled
-      - ./:/var/www/html
+      - ./infra/nginx/conf.d:/etc/nginx/sites-enabled
+      - ./magento2:/var/www/html
     links:
       - php-7-0-33-daemon
+
+  # MySQL Database
+  database:
+    image: mysql:5.6
+    restart: always
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./infra/mysql/db:/var/lib/mysql
+    environment:
+      MYSQL_DATABASE: "magento2"
+      MYSQL_USER: "root"
+      MYSQL_PASS: "root"

@@ -3,11 +3,10 @@ FROM 00f100/php-fpm-zts:7.0.33
 ARG UID
 ARG GID
 
-RUN apt-get update
-
-RUN apt-get install --assume-yes --no-install-recommends \
-    git \
-    zip
+RUN apt-get update \
+    && apt-get install --assume-yes --no-install-recommends \
+            git \
+            zip
 
 RUN mv /opt/php-7.0/lib/php.ini /opt/php-7.0/lib/php.ini.default
 
@@ -31,14 +30,19 @@ ENV PATH "/opt/composer/bin:$PATH"
 RUN mkdir /source \
     && chown "$UID:$GID" /source
 
+RUN apt-get autoremove -y && apt-get autoclean -y && apt-get clean -y
+
 RUN rm -Rf /var/lib/apt/lists \
     && rm -Rf /var/cache/apt \
-    && rm -Rf /tmp
+    && rm -Rf /tmp \
+    && mkdir /tmp \
+    && chmod 777 -R /tmp \
+    && chown 33:33 -R /tmp
 
 VOLUME /opt/composer/.composer
-VOLUME /source
+VOLUME /var/www/html
 
-WORKDIR /source
+WORKDIR /var/www/html
 
 CMD ["-"]
 
