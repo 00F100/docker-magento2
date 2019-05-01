@@ -76,7 +76,8 @@ RUN cd /usr/local/src/php7.0-build/php-7.0.33/ \
     && make \
     && make install
 
-RUN cp /usr/local/src/php7.0-build/php-7.0.33/php.ini-production /opt/php-7.0/lib/php.ini
+RUN cp /usr/local/src/php7.0-build/php-7.0.33/php.ini-production /opt/php-7.0/lib/php/php.ini \
+    && echo "extension=php_pthreads.so" >> /opt/php-7.0/lib/php/php.ini
 
 RUN sed 's/\;pid = run\/php-fpm.pid/pid = run\/php-fpm.pid/g' \
     /opt/php-7.0/etc/php-fpm.conf.default \
