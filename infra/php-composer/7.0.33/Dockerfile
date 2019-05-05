@@ -1,12 +1,10 @@
 FROM 00f100/php-fpm-zts:7.0.33
 
-ARG UID
-ARG GID
-
 RUN apt-get update \
     && apt-get install --assume-yes --no-install-recommends \
             git \
-            zip
+            zip \
+            unzip
 
 RUN mv /opt/php-7.0/lib/php.ini /opt/php-7.0/lib/php.ini.default
 
@@ -27,8 +25,10 @@ RUN mkdir -p /opt/composer/bin \
 
 ENV PATH "/opt/composer/bin:$PATH"
 
-RUN mkdir /source \
-    && chown "$UID:$GID" /source
+RUN mkdir -p /var/www/html \
+    && chown www-data:www-data /var/www/html \
+    && chown -R www-data:www-data /opt/composer \
+    && chmod 2775 -R /opt/composer
 
 RUN apt-get autoremove -y && apt-get autoclean -y && apt-get clean -y
 
@@ -37,7 +37,7 @@ RUN rm -Rf /var/lib/apt/lists \
     && rm -Rf /tmp \
     && mkdir /tmp \
     && chmod 777 -R /tmp \
-    && chown 33:33 -R /tmp
+    && chown www-data:www-data -R /tmp
 
 VOLUME /opt/composer/.composer
 VOLUME /var/www/html
